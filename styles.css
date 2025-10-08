@@ -496,7 +496,7 @@ body {
 /* iPhone Mockup Section */
 .mockup-section {
     position: relative;
-    height: 360vh; /* Adjusted for simplified stages */
+    height: 420vh; /* Extended for longer middle zoom */
     pointer-events: none;
     z-index: 20;
     margin-top: -100vh;

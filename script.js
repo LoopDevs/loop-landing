@@ -193,7 +193,7 @@ class ScrollAnimationController {
             this.mockupContainer.style.opacity = 1; // Always full opacity
 
             // Unstick after simplified animations complete
-            if (scrollY > this.heroHeight * 3.0) {
+            if (scrollY > this.heroHeight * 3.4) {
                 // Simply hide the phone after animations complete
                 this.mockupContainer.style.display = 'none';
             } else {
@@ -228,10 +228,10 @@ class ScrollAnimationController {
         // Simplified stages: full view -> top zoom -> middle zoom -> zoom out
         const mockupScrollStart = this.heroHeight * 0.5;
 
-        const stageTopZoom = mockupScrollStart;                    // Zoom to top
-        const stageMiddleZoom = mockupScrollStart + this.heroHeight * 1.0;  // Zoom/pan to middle
-        const stageZoomOut = mockupScrollStart + this.heroHeight * 2.0;     // Zoom out to full
-        const stageEnd = mockupScrollStart + this.heroHeight * 2.6;         // End window for zoom-out
+        const stageTopZoom = mockupScrollStart;                                 // Zoom to top
+        const stageMiddleZoom = mockupScrollStart + this.heroHeight * 0.8;     // Start middle zoom a bit earlier
+        const stageZoomOut = mockupScrollStart + this.heroHeight * 2.6;        // Extend middle zoom duration
+        const stageEnd = mockupScrollStart + this.heroHeight * 3.0;            // End window for zoom-out
 
         // Reset classes each frame
         this.iphoneMockup.className = 'iphone-mockup';
