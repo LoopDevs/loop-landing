@@ -20,12 +20,23 @@ class ScrollAnimationController {
 
         this.heroHeight = window.innerHeight;
         this.mockupSectionStart = this.heroHeight;
+        this.timeline = this.computeTimeline();
         this.currentZoomIndex = -1;
 
         // Store initial logo data after a delay to ensure CSS is applied
         setTimeout(() => {
             this.storeInitialLogoData();
         }, 100);
+    }
+
+    computeTimeline() {
+        // Unified scroll timeline for the mockup sequence
+        // start: when sequence begins
+        // end: when sequence finishes and mockup unsticks
+        const start = this.heroHeight * 0.5;     // after initial header/slide-in
+        const total = this.heroHeight * 3.2;     // total sequence length
+        const end = start + total;
+        return { start, end, total };
     }
 
     storeInitialLogoData() {
@@ -192,8 +203,8 @@ class ScrollAnimationController {
             const slideProgress = Math.min((scrollProgress - slideInStart) / (slideInEnd - slideInStart), 1);
             this.mockupContainer.style.opacity = 1; // Always full opacity
 
-            // Unstick after simplified animations complete
-            const unstickAt = this.heroHeight * 3.8;
+            // Unstick when unified timeline finishes
+            const unstickAt = this.timeline.end;
             if (scrollY > unstickAt) {
                 // Stop being sticky; let it scroll naturally
                 this.mockupContainer.style.display = 'flex';
@@ -231,15 +242,14 @@ class ScrollAnimationController {
 
     handleZoomAnimations(scrollY) {
         // Simplified stages: full view -> top zoom -> middle zoom -> zoom out
-        const mockupScrollStart = this.heroHeight * 0.5;
+        const start = this.timeline.start;
+        const end = this.timeline.end;
+        const progress = Math.max(0, Math.min(1, (scrollY - start) / (end - start)));
 
-        const stageTopZoom = mockupScrollStart;                                 // Zoom to top
-        const stageMiddleZoom = mockupScrollStart + this.heroHeight * 0.8;     // Start middle zoom a bit earlier
-        const stageZoomOut = mockupScrollStart + this.heroHeight * 2.6;        // Extend middle zoom duration
-        const stageEnd = mockupScrollStart + this.heroHeight * 3.0;            // End window for zoom-out
-
-        // Fade gift-cards annotation slightly before zoom-out begins
-        const giftcardsHide = mockupScrollStart + this.heroHeight * 2.4;
+        // Stage fractions
+        const topEndFrac = 0.30;      // end of top zoom
+        const middleEndFrac = 0.78;   // end of extended middle zoom
+        const zoomOutEndFrac = 0.95;  // finish zoom-out before unstick window
 
         // Reset classes each frame
         this.iphoneMockup.className = 'iphone-mockup';
@@ -247,21 +257,24 @@ class ScrollAnimationController {
         if (this.cashbackAnnotation) this.cashbackAnnotation.classList.remove('visible');
         if (this.giftcardsAnnotation) this.giftcardsAnnotation.classList.remove('visible');
 
-        if (scrollY < stageTopZoom) {
+        if (progress <= 0) {
             // Full view
-        } else if (scrollY < stageMiddleZoom) {
+        } else if (progress < topEndFrac) {
             // Top zoom
             this.iphoneMockup.classList.add('zoom-card');
             if (this.cashbackAnnotation) this.cashbackAnnotation.classList.add('visible');
-        } else if (scrollY < stageZoomOut) {
-            // Middle zoom
+        } else if (progress < middleEndFrac) {
+            // Middle zoom (longer)
             this.iphoneMockup.classList.add('zoom-merchants');
-            if (this.giftcardsAnnotation && scrollY < giftcardsHide) {
+            // Hide slightly before the end to avoid overlap with transition
+            if (progress < middleEndFrac - 0.08 && this.giftcardsAnnotation) {
                 this.giftcardsAnnotation.classList.add('visible');
             }
-        } else if (scrollY < stageEnd) {
+        } else if (progress < zoomOutEndFrac) {
             // Zoom out
             this.iphoneMockup.classList.add('zoom-out');
+        } else {
+            // Final part of timeline: keep full view until unstick
         }
 
         // Trigger review animations when in view
@@ -284,6 +297,7 @@ class ScrollAnimationController {
     handleResize() {
         this.heroHeight = window.innerHeight;
         this.mockupSectionStart = this.heroHeight;
+        this.timeline = this.computeTimeline();
         // Recalculate logo positions
         this.storeInitialLogoData();
     }
