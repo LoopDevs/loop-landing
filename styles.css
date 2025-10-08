@@ -249,15 +249,15 @@ body {
 
 /* Mobile adjustments: keep logos above and below CTA */
 @media (max-width: 768px) {
-    /* Keep Loop logo visible and fixed (doesn't scroll) on mobile */
+    /* Make Loop logo scroll with page (disappear on scroll) */
     .logo-header {
-        position: fixed !important;
-        top: 12px !important;
-        left: 12px !important;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
         right: auto !important;
-        z-index: 2000 !important;
+        z-index: auto !important;
         padding: 0;
-        transform: none !important; /* ensure no ancestor/inline transform affects it */
+        transform: none !important;
     }
 
     .logo-container { padding: 6px 8px; }
