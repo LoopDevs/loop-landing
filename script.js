@@ -235,15 +235,20 @@ class ScrollAnimationController {
 
         // Reset classes each frame
         this.iphoneMockup.className = 'iphone-mockup';
+        // Reset annotations each frame
+        if (this.cashbackAnnotation) this.cashbackAnnotation.classList.remove('visible');
+        if (this.giftcardsAnnotation) this.giftcardsAnnotation.classList.remove('visible');
 
         if (scrollY < stageTopZoom) {
             // Full view
         } else if (scrollY < stageMiddleZoom) {
             // Top zoom
             this.iphoneMockup.classList.add('zoom-card');
+            if (this.cashbackAnnotation) this.cashbackAnnotation.classList.add('visible');
         } else if (scrollY < stageZoomOut) {
             // Middle zoom
             this.iphoneMockup.classList.add('zoom-merchants');
+            if (this.giftcardsAnnotation) this.giftcardsAnnotation.classList.add('visible');
         } else if (scrollY < stageEnd) {
             // Zoom out
             this.iphoneMockup.classList.add('zoom-out');
