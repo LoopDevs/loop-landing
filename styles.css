@@ -496,7 +496,7 @@ body {
 /* iPhone Mockup Section */
 .mockup-section {
     position: relative;
-    height: 420vh; /* Extended for longer middle zoom */
+    height: 480vh; /* Extended so sticky lasts longer and scrolls out naturally */
     pointer-events: none;
     z-index: 20;
     margin-top: -100vh;

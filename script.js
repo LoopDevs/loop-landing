@@ -193,9 +193,14 @@ class ScrollAnimationController {
             this.mockupContainer.style.opacity = 1; // Always full opacity
 
             // Unstick after simplified animations complete
-            if (scrollY > this.heroHeight * 3.4) {
-                // Simply hide the phone after animations complete
-                this.mockupContainer.style.display = 'none';
+            const unstickAt = this.heroHeight * 3.8;
+            if (scrollY > unstickAt) {
+                // Stop being sticky; let it scroll naturally
+                this.mockupContainer.style.display = 'flex';
+                this.mockupContainer.style.position = 'relative';
+                this.mockupContainer.style.top = 'auto';
+                this.mockupContainer.style.marginBottom = '0';
+                this.mockupContainer.style.transform = 'translateY(0) scale(1)';
             } else {
                 this.mockupContainer.style.display = 'flex';
                 // Stay sticky and centered during all animation stages
