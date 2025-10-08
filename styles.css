@@ -954,7 +954,7 @@ body {
     background: #f8f8f8;
     padding: 80px 20px;
     color: #1a1a1a;
-    margin-top: 20px;
+    margin-top: 0;
     position: relative;
     z-index: 30;
 }
