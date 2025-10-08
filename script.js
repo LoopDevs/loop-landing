@@ -434,4 +434,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const img = new Image();
         img.src = src;
     });
+
+    // Load brand logos in scroller with robust fallbacks
+    const loadWithFallback = (img) => {
+        const srcs = (img.getAttribute('data-srcs') || '').split(',').map(s => s.trim()).filter(Boolean);
+        if (!srcs.length) return;
+        let i = 0;
+        const tryNext = () => {
+            if (i >= srcs.length) return;
+            img.onerror = () => { i++; tryNext(); };
+            img.src = srcs[i];
+        };
+        tryNext();
+    };
+    document.querySelectorAll('.merchant-logo img[data-srcs]').forEach(loadWithFallback);
 });
