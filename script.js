@@ -242,6 +242,7 @@ class ScrollAnimationController {
         const slideInStart = 0.1;  // Start as header begins to fade
         const slideInEnd = 0.4;    // Complete slide-in as header disappears
 
+        const isMobile = window.innerWidth < 768;
         if (scrollProgress > slideInStart) {
             const slideProgress = Math.min((scrollProgress - slideInStart) / (slideInEnd - slideInStart), 1);
             this.mockupContainer.style.opacity = 1; // Always full opacity
@@ -256,7 +257,9 @@ class ScrollAnimationController {
             if (slideProgress < 1) {
                 // Slide the phone up from below the viewport and scale in
                 const translateY = 50 - (slideProgress * 50); // 50vh -> 0
-                const scale = 0.9 + (slideProgress * 0.1);    // 0.9 -> 1.0
+                const startScale = isMobile ? 0.78 : 0.9;
+                const endScale = isMobile ? 0.92 : 1.0;
+                const scale = startScale + (endScale - startScale) * slideProgress;
                 this.iphoneMockup.style.transform = `translateY(${translateY}vh) scale(${scale})`;
             } else {
                 // Clear inline transforms so zoom classes take over
@@ -270,8 +273,9 @@ class ScrollAnimationController {
             this.mockupContainer.style.position = 'sticky';
             this.mockupContainer.style.top = '0';
             this.mockupContainer.style.marginBottom = '0';
-            // Phone starts lowered and slightly scaled down
-            this.iphoneMockup.style.transform = 'translateY(50vh) scale(0.9)';
+            // Phone starts lowered and slightly scaled down (smaller on mobile)
+            const startScale = isMobile ? 0.78 : 0.9;
+            this.iphoneMockup.style.transform = `translateY(50vh) scale(${startScale})`;
         }
     }
 
