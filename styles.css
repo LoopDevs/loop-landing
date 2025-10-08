@@ -841,6 +841,14 @@ body {
     margin: 0 auto;
 }
 
+/* Stack reviews vertically on narrower screens */
+@media (max-width: 1000px) {
+    .reviews-grid {
+        grid-template-columns: 1fr;
+        max-width: 680px;
+    }
+}
+
 .review-card {
     background: #f8f8f8;
     padding: 30px;
