@@ -203,32 +203,20 @@ class ScrollAnimationController {
             const slideProgress = Math.min((scrollProgress - slideInStart) / (slideInEnd - slideInStart), 1);
             this.mockupContainer.style.opacity = 1; // Always full opacity
 
-            // Unstick when unified timeline finishes
-            const unstickAt = this.timeline.end;
-            if (scrollY > unstickAt) {
-                // Stop being sticky; let it scroll naturally
-                this.mockupContainer.style.display = 'flex';
-                this.mockupContainer.style.position = 'relative';
-                this.mockupContainer.style.top = 'auto';
-                this.mockupContainer.style.marginBottom = '0';
-                this.mockupContainer.style.transform = 'translateY(0) scale(1)';
+            // Keep sticky throughout the sequence; let CSS sticky handle the natural unstick at section end
+            this.mockupContainer.style.display = 'flex';
+            this.mockupContainer.style.position = 'sticky';
+            this.mockupContainer.style.top = '50%';
+            this.mockupContainer.style.marginBottom = '0';
+
+            if (slideProgress < 1) {
+                // Stage 1: Sliding up over header
+                const translateY = 50 - (slideProgress * 100);
+                const scale = 0.9 + (slideProgress * 0.1);
+                this.mockupContainer.style.transform = `translateY(${translateY}vh) scale(${scale})`;
             } else {
-                this.mockupContainer.style.display = 'flex';
-                // Stay sticky and centered during all animation stages
-                this.mockupContainer.style.position = 'sticky';
-                this.mockupContainer.style.top = '50%';
-                this.mockupContainer.style.marginBottom = '0';
-
-
-                if (slideProgress < 1) {
-                    // Stage 1: Sliding up over header
-                    const translateY = 50 - (slideProgress * 100);
-                    const scale = 0.9 + (slideProgress * 0.1);
-                    this.mockupContainer.style.transform = `translateY(${translateY}vh) scale(${scale})`;
-                } else {
-                    // Centered for zoom animations
-                    this.mockupContainer.style.transform = `translateY(-50%) scale(1)`;
-                }
+                // Centered for zoom animations
+                this.mockupContainer.style.transform = `translateY(-50%) scale(1)`;
             }
         } else {
             // Initial state - hidden below
