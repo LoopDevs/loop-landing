@@ -496,7 +496,7 @@ body {
 /* iPhone Mockup Section */
 .mockup-section {
     position: relative;
-    height: 480vh; /* Extended so sticky lasts longer and scrolls out naturally */
+    height: 680vh; /* Ensure sticky holds through full timeline (no early unstick) */
     pointer-events: none;
     z-index: 20;
     margin-top: -100vh;
