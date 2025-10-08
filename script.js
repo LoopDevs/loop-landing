@@ -39,6 +39,9 @@ class ScrollAnimationController {
         setTimeout(() => {
             this.storeInitialLogoData();
         }, 100);
+
+        // Set initial section height so sticky ends cleanly without large gaps
+        this.updateSectionHeight();
     }
 
     computeTimeline() {
@@ -49,6 +52,23 @@ class ScrollAnimationController {
         const total = this.heroHeight * 3.2;     // total sequence length
         const end = start + total;
         return { start, end, total };
+    }
+
+    updateSectionHeight() {
+        // Compute container height so sticky holds only as long as needed
+        const desktop = window.innerWidth >= 1024;
+        const zoomOutStartAbs = 3200; // desktop zoom-out threshold
+
+        // Base needed height (timeline end + small runway)
+        const baseNeeded = this.timeline.end + this.heroHeight * 0.3;
+        // Ensure enough space for desktop absolute zoom-out start + runway
+        const desktopNeeded = desktop ? (zoomOutStartAbs + this.heroHeight * 1.2) : 0;
+        const needed = Math.max(baseNeeded, desktopNeeded);
+
+        const section = document.querySelector('.mockup-section');
+        if (section) {
+            section.style.height = `${Math.ceil(needed)}px`;
+        }
     }
 
     storeInitialLogoData() {
@@ -332,6 +352,7 @@ class ScrollAnimationController {
         this.heroHeight = window.innerHeight;
         this.mockupSectionStart = this.heroHeight;
         this.timeline = this.computeTimeline();
+        this.updateSectionHeight();
         // Recalculate logo positions
         this.storeInitialLogoData();
     }

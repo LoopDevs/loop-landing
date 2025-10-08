@@ -496,7 +496,8 @@ body {
 /* iPhone Mockup Section */
 .mockup-section {
     position: relative;
-    height: 680vh; /* Ensure sticky holds through full timeline (no early unstick) */
+    /* JS sets explicit height; keep a safe minimum as fallback */
+    min-height: 360vh;
     pointer-events: none;
     z-index: 20;
     margin-top: -100vh;
