@@ -249,6 +249,22 @@ body {
 
 /* Mobile adjustments: keep logos above and below CTA */
 @media (max-width: 768px) {
+    /* Make the top-left Loop logo non-fixed on mobile */
+    .logo-header {
+        position: static;
+        top: auto;
+        left: auto;
+        z-index: auto;
+        padding: 10px 12px;
+    }
+
+    .logo-container {
+        padding: 8px 10px;
+    }
+
+    .loop-logo {
+        width: 64px;
+    }
     .download-buttons {
         padding-left: clamp(16px, 5vw, 28px);
         padding-right: clamp(16px, 5vw, 28px);
