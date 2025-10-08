@@ -246,31 +246,32 @@ class ScrollAnimationController {
             const slideProgress = Math.min((scrollProgress - slideInStart) / (slideInEnd - slideInStart), 1);
             this.mockupContainer.style.opacity = 1; // Always full opacity
 
-            // Always keep sticky; never switch to relative (prevents disappearance)
+            // Keep container sticky at top:0, and animate the phone element instead
             this.mockupContainer.style.display = 'flex';
             this.mockupContainer.style.position = 'sticky';
-            this.mockupContainer.style.top = '50%';
+            this.mockupContainer.style.top = '0';
             this.mockupContainer.style.marginBottom = '0';
             this._lastStickyState = 'sticky';
 
             if (slideProgress < 1) {
-                // Stage 1: Sliding up over header
-                const translateY = 50 - (slideProgress * 100);
-                const scale = 0.9 + (slideProgress * 0.1);
-                this.mockupContainer.style.transform = `translateY(${translateY}vh) scale(${scale})`;
+                // Slide the phone up from below the viewport and scale in
+                const translateY = 50 - (slideProgress * 50); // 50vh -> 0
+                const scale = 0.9 + (slideProgress * 0.1);    // 0.9 -> 1.0
+                this.iphoneMockup.style.transform = `translateY(${translateY}vh) scale(${scale})`;
             } else {
-                // Centered for zoom animations
-                this.mockupContainer.style.transform = `translateY(-50%) scale(1)`;
+                // Clear inline transforms so zoom classes take over
+                this.iphoneMockup.style.transform = '';
             }
 
             // Debug overlay updated in handleZoomAnimations
         } else {
             // Initial state - hidden below
             this.mockupContainer.style.opacity = 0;
-            this.mockupContainer.style.transform = 'translateY(50vh) scale(0.9)';
             this.mockupContainer.style.position = 'sticky';
-            this.mockupContainer.style.top = '50%';
+            this.mockupContainer.style.top = '0';
             this.mockupContainer.style.marginBottom = '0';
+            // Phone starts lowered and slightly scaled down
+            this.iphoneMockup.style.transform = 'translateY(50vh) scale(0.9)';
         }
     }
 

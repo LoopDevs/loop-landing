@@ -552,8 +552,8 @@ body {
 
 .mockup-container {
     position: sticky;
-    top: 50%;
-    transform: translateY(50vh) scale(0.8);
+    top: 0;
+    transform: none;
     opacity: 0;
     transition: all 0.3s ease-out;
     display: flex;
