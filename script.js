@@ -27,6 +27,12 @@ class ScrollAnimationController {
         this._lastStickyState = undefined;
         // 0..1 of unified timeline to unstick; set <1 for earlier unstick
         this.unstickFrac = 1.0;
+
+        if (this.debug) {
+            this.debugOverlay = document.createElement('div');
+            this.debugOverlay.id = 'debug-overlay';
+            document.body.appendChild(this.debugOverlay);
+        }
         this.currentZoomIndex = -1;
 
         // Store initial logo data after a delay to ensure CSS is applied
@@ -88,6 +94,14 @@ class ScrollAnimationController {
 
         // Handle zoom animations
         this.handleZoomAnimations(scrollY);
+    }
+
+    updateDebug(data = {}) {
+        if (!this.debug) return;
+        const { progress, stickyState, stage, scrollY } = data;
+        const p = progress !== undefined ? progress.toFixed(3) : '—';
+        const txt = `stage: ${stage || '—'}\nprogress: ${p}\nsticky: ${stickyState || '—'}\nscrollY: ${Math.round(scrollY || 0)}\nunstickFrac: ${this.unstickFrac}`;
+        if (this.debugOverlay) this.debugOverlay.textContent = txt;
     }
 
     updateLogoBackground(scrollY) {
@@ -245,6 +259,14 @@ class ScrollAnimationController {
                 // Centered for zoom animations
                 this.mockupContainer.style.transform = `translateY(-50%) scale(1)`;
             }
+
+            // Update overlay with latest state
+            this.updateDebug({
+                progress: timelineProgress,
+                stickyState: this._lastStickyState,
+                stage: this.prevStage,
+                scrollY
+            });
         } else {
             // Initial state - hidden below
             this.mockupContainer.style.opacity = 0;
@@ -295,6 +317,14 @@ class ScrollAnimationController {
 
         // Trigger review animations when in view
         this.animateReviewsInView();
+
+        // Update overlay with latest stage/progress
+        this.updateDebug({
+            progress,
+            stickyState: this._lastStickyState,
+            stage,
+            scrollY
+        });
 
         // Stage transition logging (throttled)
         if (this.debug && stage !== this.prevStage) {
@@ -383,8 +413,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 50);
     });
 
-    new ScrollAnimationController();
+    const ctrl = new ScrollAnimationController();
     new SmoothScrollOptimizer();
+
+    // Expose helper for live tuning of unstick fraction
+    window.loopSetUnstick = (f) => {
+        const val = Math.max(0, Math.min(1, Number(f)));
+        ctrl.unstickFrac = val;
+        console.log('[mockup] unstickFrac set to', val);
+    };
 
     // Preload images for better performance
     const images = [

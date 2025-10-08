@@ -743,6 +743,23 @@ body {
     white-space: nowrap;
 }
 
+/* Debug overlay */
+#debug-overlay {
+    position: fixed;
+    left: 12px;
+    bottom: 12px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #00ff88;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.35;
+    padding: 8px 10px;
+    border-radius: 6px;
+    z-index: 9999;
+    pointer-events: none;
+    white-space: pre;
+}
+
 /* Reviews Section */
 .reviews-section {
     padding: 80px 20px;
