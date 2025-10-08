@@ -21,6 +21,12 @@ class ScrollAnimationController {
         this.heroHeight = window.innerHeight;
         this.mockupSectionStart = this.heroHeight;
         this.timeline = this.computeTimeline();
+        // Debug and timing controls
+        this.debug = true;
+        this.prevStage = 'init';
+        this._lastStickyState = undefined;
+        // 0..1 of unified timeline to unstick; set <1 for earlier unstick
+        this.unstickFrac = 1.0;
         this.currentZoomIndex = -1;
 
         // Store initial logo data after a delay to ensure CSS is applied
@@ -203,11 +209,32 @@ class ScrollAnimationController {
             const slideProgress = Math.min((scrollProgress - slideInStart) / (slideInEnd - slideInStart), 1);
             this.mockupContainer.style.opacity = 1; // Always full opacity
 
-            // Keep sticky throughout the sequence; let CSS sticky handle the natural unstick at section end
-            this.mockupContainer.style.display = 'flex';
-            this.mockupContainer.style.position = 'sticky';
-            this.mockupContainer.style.top = '50%';
-            this.mockupContainer.style.marginBottom = '0';
+            // Determine unified progress and optionally unstick earlier
+            const t = this.timeline;
+            const timelineProgress = Math.max(0, Math.min(1, (scrollY - t.start) / (t.total)));
+            const shouldUnstick = timelineProgress >= this.unstickFrac;
+
+            if (shouldUnstick) {
+                if (this.debug && this._lastStickyState !== 'relative') {
+                    console.log(`[mockup] Unstick at progress=${timelineProgress.toFixed(3)} (threshold=${this.unstickFrac}), scrollY=${Math.round(scrollY)}`);
+                }
+                this.mockupContainer.style.display = 'flex';
+                this.mockupContainer.style.position = 'relative';
+                this.mockupContainer.style.top = 'auto';
+                this.mockupContainer.style.marginBottom = '0';
+                this.mockupContainer.style.transform = 'translateY(0) scale(1)';
+                this._lastStickyState = 'relative';
+            } else {
+                if (this.debug && this._lastStickyState !== 'sticky') {
+                    console.log(`[mockup] Sticky (progress=${timelineProgress.toFixed(3)}), scrollY=${Math.round(scrollY)}`);
+                }
+                // Stay sticky and centered during all animation stages
+                this.mockupContainer.style.display = 'flex';
+                this.mockupContainer.style.position = 'sticky';
+                this.mockupContainer.style.top = '50%';
+                this.mockupContainer.style.marginBottom = '0';
+                this._lastStickyState = 'sticky';
+            }
 
             if (slideProgress < 1) {
                 // Stage 1: Sliding up over header
@@ -244,12 +271,14 @@ class ScrollAnimationController {
         if (this.cashbackAnnotation) this.cashbackAnnotation.classList.remove('visible');
         if (this.giftcardsAnnotation) this.giftcardsAnnotation.classList.remove('visible');
 
+        let stage = 'full';
         if (progress <= 0) {
             // Full view
         } else if (progress < topEndFrac) {
             // Top zoom
             this.iphoneMockup.classList.add('zoom-card');
             if (this.cashbackAnnotation) this.cashbackAnnotation.classList.add('visible');
+            stage = 'zoom-top';
         } else if (progress < middleEndFrac) {
             // Middle zoom (longer)
             this.iphoneMockup.classList.add('zoom-merchants');
@@ -257,13 +286,21 @@ class ScrollAnimationController {
             if (progress < middleEndFrac - 0.08 && this.giftcardsAnnotation) {
                 this.giftcardsAnnotation.classList.add('visible');
             }
+            stage = 'zoom-middle';
         } else {
             // Zoom out and hold full view through the end (single zoom-out stage)
             this.iphoneMockup.classList.add('zoom-out');
+            stage = 'zoom-out';
         }
 
         // Trigger review animations when in view
         this.animateReviewsInView();
+
+        // Stage transition logging (throttled)
+        if (this.debug && stage !== this.prevStage) {
+            console.log(`[stage] ${stage} | progress=${progress.toFixed(3)} | scrollY=${Math.round(scrollY)} | start=${Math.round(start)} end=${Math.round(end)} | fractions: topEnd=${topEndFrac}, middleEnd=${middleEndFrac}, unstickFrac=${this.unstickFrac}`);
+            this.prevStage = stage;
+        }
     }
 
     animateReviewsInView() {
