@@ -266,10 +266,10 @@ body {
         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
     }
 
-    /* Top row */
-    .logo-1 { top: 6%; left: 12%; right: auto; bottom: auto; }
+    /* Top row (pushed away from header logo) */
+    .logo-1 { top: 12%; left: 24%; right: auto; bottom: auto; }
     .logo-2 { top: 6%; right: 12%; left: auto; bottom: auto; }
-    .logo-3 { top: 16%; left: 20%; right: auto; bottom: auto; }
+    .logo-3 { top: 20%; left: 30%; right: auto; bottom: auto; }
     .logo-4 { top: 16%; right: 20%; left: auto; bottom: auto; }
 
     /* Bottom row */
@@ -277,6 +277,14 @@ body {
     .logo-6 { bottom: 12%; right: 16%; top: auto; left: auto; }
     .logo-7 { bottom: 20%; left: 26%; top: auto; right: auto; }
     .logo-8 { bottom: 20%; right: 26%; top: auto; left: auto; }
+}
+
+/* Ensure top-left logo never intrudes into header area on larger screens */
+@media (min-width: 769px) {
+    .logo-1 {
+        top: max(15%, 110px);
+        left: max(10%, 130px);
+    }
 }
 
 /* Scroll Animation States */
