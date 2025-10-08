@@ -223,32 +223,12 @@ class ScrollAnimationController {
             const slideProgress = Math.min((scrollProgress - slideInStart) / (slideInEnd - slideInStart), 1);
             this.mockupContainer.style.opacity = 1; // Always full opacity
 
-            // Determine unified progress and optionally unstick earlier
-            const t = this.timeline;
-            const timelineProgress = Math.max(0, Math.min(1, (scrollY - t.start) / (t.total)));
-            const shouldUnstick = timelineProgress >= this.unstickFrac;
-
-            if (shouldUnstick) {
-                if (this.debug && this._lastStickyState !== 'relative') {
-                    console.log(`[mockup] Unstick at progress=${timelineProgress.toFixed(3)} (threshold=${this.unstickFrac}), scrollY=${Math.round(scrollY)}`);
-                }
-                this.mockupContainer.style.display = 'flex';
-                this.mockupContainer.style.position = 'relative';
-                this.mockupContainer.style.top = 'auto';
-                this.mockupContainer.style.marginBottom = '0';
-                this.mockupContainer.style.transform = 'translateY(0) scale(1)';
-                this._lastStickyState = 'relative';
-            } else {
-                if (this.debug && this._lastStickyState !== 'sticky') {
-                    console.log(`[mockup] Sticky (progress=${timelineProgress.toFixed(3)}), scrollY=${Math.round(scrollY)}`);
-                }
-                // Stay sticky and centered during all animation stages
-                this.mockupContainer.style.display = 'flex';
-                this.mockupContainer.style.position = 'sticky';
-                this.mockupContainer.style.top = '50%';
-                this.mockupContainer.style.marginBottom = '0';
-                this._lastStickyState = 'sticky';
-            }
+            // Always keep sticky; never switch to relative (prevents disappearance)
+            this.mockupContainer.style.display = 'flex';
+            this.mockupContainer.style.position = 'sticky';
+            this.mockupContainer.style.top = '50%';
+            this.mockupContainer.style.marginBottom = '0';
+            this._lastStickyState = 'sticky';
 
             if (slideProgress < 1) {
                 // Stage 1: Sliding up over header
@@ -260,13 +240,7 @@ class ScrollAnimationController {
                 this.mockupContainer.style.transform = `translateY(-50%) scale(1)`;
             }
 
-            // Update overlay with latest state
-            this.updateDebug({
-                progress: timelineProgress,
-                stickyState: this._lastStickyState,
-                stage: this.prevStage,
-                scrollY
-            });
+            // Debug overlay updated in handleZoomAnimations
         } else {
             // Initial state - hidden below
             this.mockupContainer.style.opacity = 0;
@@ -283,9 +257,14 @@ class ScrollAnimationController {
         const end = this.timeline.end;
         const progress = Math.max(0, Math.min(1, (scrollY - start) / (end - start)));
 
-        // Stage fractions
+        // Stage fractions (relative), with desktop override for zoom-out start
         const topEndFrac = 0.30;      // end of top zoom
         const middleEndFrac = 0.78;   // end of extended middle zoom
+        const desktop = window.innerWidth >= 1024;
+        const zoomOutStartAbs = 3200; // desktop zoom-out threshold (scrollY)
+        const topEndAbs = start + (end - start) * topEndFrac;
+        const middleEndAbsDefault = start + (end - start) * middleEndFrac;
+        const middleEndAbs = desktop ? zoomOutStartAbs : middleEndAbsDefault;
 
         // Reset classes each frame
         this.iphoneMockup.className = 'iphone-mockup';
@@ -296,16 +275,17 @@ class ScrollAnimationController {
         let stage = 'full';
         if (progress <= 0) {
             // Full view
-        } else if (progress < topEndFrac) {
+        } else if (scrollY < topEndAbs) {
             // Top zoom
             this.iphoneMockup.classList.add('zoom-card');
             if (this.cashbackAnnotation) this.cashbackAnnotation.classList.add('visible');
             stage = 'zoom-top';
-        } else if (progress < middleEndFrac) {
+        } else if (scrollY < middleEndAbs) {
             // Middle zoom (longer)
             this.iphoneMockup.classList.add('zoom-merchants');
             // Hide slightly before the end to avoid overlap with transition
-            if (progress < middleEndFrac - 0.08 && this.giftcardsAnnotation) {
+            const hideAhead = desktop ? 120 : (end - start) * 0.08; // px vs fraction
+            if ((desktop ? (middleEndAbs - scrollY > hideAhead) : (progress < middleEndFrac - 0.08)) && this.giftcardsAnnotation) {
                 this.giftcardsAnnotation.classList.add('visible');
             }
             stage = 'zoom-middle';
@@ -321,14 +301,16 @@ class ScrollAnimationController {
         // Update overlay with latest stage/progress
         this.updateDebug({
             progress,
-            stickyState: this._lastStickyState,
             stage,
-            scrollY
+            scrollY,
+            topEnd: topEndAbs,
+            middleEnd: middleEndAbs,
+            zoomOutStart: desktop ? zoomOutStartAbs : middleEndAbs
         });
 
         // Stage transition logging (throttled)
         if (this.debug && stage !== this.prevStage) {
-            console.log(`[stage] ${stage} | progress=${progress.toFixed(3)} | scrollY=${Math.round(scrollY)} | start=${Math.round(start)} end=${Math.round(end)} | fractions: topEnd=${topEndFrac}, middleEnd=${middleEndFrac}, unstickFrac=${this.unstickFrac}`);
+            console.log(`[stage] ${stage} | progress=${progress.toFixed(3)} | scrollY=${Math.round(scrollY)} | topEndAbs=${Math.round(topEndAbs)} middleEndAbs=${Math.round(middleEndAbs)} zoomOutStartAbs=${desktop ? zoomOutStartAbs : Math.round(middleEndAbs)}`);
             this.prevStage = stage;
         }
     }
