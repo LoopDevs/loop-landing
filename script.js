@@ -21,18 +21,13 @@ class ScrollAnimationController {
         this.heroHeight = window.innerHeight;
         this.mockupSectionStart = this.heroHeight;
         this.timeline = this.computeTimeline();
-        // Debug and timing controls
-        this.debug = true;
+        // Debug disabled
+        this.debug = false;
         this.prevStage = 'init';
         this._lastStickyState = undefined;
         // 0..1 of unified timeline to unstick; set <1 for earlier unstick
         this.unstickFrac = 1.0;
 
-        if (this.debug) {
-            this.debugOverlay = document.createElement('div');
-            this.debugOverlay.id = 'debug-overlay';
-            document.body.appendChild(this.debugOverlay);
-        }
         this.currentZoomIndex = -1;
 
         // Store initial logo data after a delay to ensure CSS is applied
@@ -91,7 +86,7 @@ class ScrollAnimationController {
             });
         });
 
-        console.log(`Initialized ${this.logoData.length} logos`);
+        // debug removed
     }
 
     setupEventListeners() {
@@ -119,13 +114,7 @@ class ScrollAnimationController {
         this.handleZoomAnimations(scrollY);
     }
 
-    updateDebug(data = {}) {
-        if (!this.debug) return;
-        const { progress, stickyState, stage, scrollY } = data;
-        const p = progress !== undefined ? progress.toFixed(3) : '—';
-        const txt = `stage: ${stage || '—'}\nprogress: ${p}\nsticky: ${stickyState || '—'}\nscrollY: ${Math.round(scrollY || 0)}\nunstickFrac: ${this.unstickFrac}`;
-        if (this.debugOverlay) this.debugOverlay.textContent = txt;
-    }
+    // debug helpers removed
 
     updateLogoBackground(scrollY) {
         // Add background to logo when scrolling
@@ -169,10 +158,7 @@ class ScrollAnimationController {
                 logo.style.transform = `translate(${currX}px, ${currY}px) scale(${scale})`;
                 logo.style.opacity = opacity;
 
-                // Debug first logo
-                if (index === 0 && animProgress > 0.1) {
-                    console.log(`Logo 0: Progress ${animProgress.toFixed(2)}, Translation: (${currX.toFixed(0)}, ${currY.toFixed(0)})`);
-                }
+                // debug removed
             } else {
                 // Reset to original state
                 logo.style.animation = '';
@@ -266,7 +252,7 @@ class ScrollAnimationController {
                 this.iphoneMockup.style.transform = '';
             }
 
-            // Debug overlay updated in handleZoomAnimations
+            // debug removed
         } else {
             // Initial state - hidden below
             this.mockupContainer.style.opacity = 0;
@@ -326,21 +312,7 @@ class ScrollAnimationController {
         // Trigger review animations when in view
         this.animateReviewsInView();
 
-        // Update overlay with latest stage/progress
-        this.updateDebug({
-            progress,
-            stage,
-            scrollY,
-            topEnd: topEndAbs,
-            middleEnd: middleEndAbs,
-            zoomOutStart: desktop ? zoomOutStartAbs : middleEndAbs
-        });
-
-        // Stage transition logging (throttled)
-        if (this.debug && stage !== this.prevStage) {
-            console.log(`[stage] ${stage} | progress=${progress.toFixed(3)} | scrollY=${Math.round(scrollY)} | topEndAbs=${Math.round(topEndAbs)} middleEndAbs=${Math.round(middleEndAbs)} zoomOutStartAbs=${desktop ? zoomOutStartAbs : Math.round(middleEndAbs)}`);
-            this.prevStage = stage;
-        }
+        // debug removed
     }
 
     animateReviewsInView() {
@@ -391,15 +363,36 @@ class SmoothScrollOptimizer {
     }
 }
 
-// Force scroll reset on page load (before DOM ready)
-window.addEventListener('load', () => {
-    window.scrollTo(0, 0);
-});
+// Robust scroll-to-top helper (handles Safari/BCache quirks)
+function forceScrollToTop() {
+    try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (_) {}
+    const el = document.scrollingElement || document.documentElement;
 
-// Also reset on beforeunload for some browsers
-window.addEventListener('beforeunload', () => {
-    window.scrollTo(0, 0);
-});
+    const setTop = () => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+        el.scrollTop = 0;
+        document.body && (document.body.scrollTop = 0);
+    };
+
+    // Try a few frames to win any late layout/restore
+    let attempts = 0; const maxAttempts = 20;
+    const tick = () => {
+        setTop();
+        attempts++;
+        if ((window.scrollY !== 0 || el.scrollTop !== 0) && attempts < maxAttempts) {
+            requestAnimationFrame(tick);
+        }
+    };
+    tick();
+    // Extra timed nudges
+    setTimeout(setTop, 50);
+    setTimeout(setTop, 200);
+}
+
+// Reset on load and pageshow (including bfcache restores)
+window.addEventListener('load', forceScrollToTop, { once: true });
+window.addEventListener('pageshow', (e) => { forceScrollToTop(); });
+window.addEventListener('beforeunload', () => { try { history.scrollRestoration = 'manual'; } catch (_) {} });
 
 // Initialize everything when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
@@ -408,16 +401,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.scrollBehavior = 'auto';
 
     // Force scroll to top
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
+    forceScrollToTop();
 
     // Multiple attempts to ensure scroll reset
     requestAnimationFrame(() => {
-        window.scrollTo(0, 0);
+        forceScrollToTop();
 
         setTimeout(() => {
-            window.scrollTo(0, 0);
+            forceScrollToTop();
             // Re-enable smooth scrolling after all resets
             document.documentElement.style.scrollBehavior = 'smooth';
             document.body.style.scrollBehavior = 'smooth';
@@ -426,13 +417,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const ctrl = new ScrollAnimationController();
     new SmoothScrollOptimizer();
-
-    // Expose helper for live tuning of unstick fraction
-    window.loopSetUnstick = (f) => {
-        const val = Math.max(0, Math.min(1, Number(f)));
-        ctrl.unstickFrac = val;
-        console.log('[mockup] unstickFrac set to', val);
-    };
 
     // Preload images for better performance
     const images = [
