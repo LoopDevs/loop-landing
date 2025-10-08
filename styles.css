@@ -255,12 +255,13 @@ body {
         top: auto !important;
         left: auto !important;
         right: auto !important;
-        z-index: auto !important;
+        z-index: 3000 !important; /* ensure it sits above content when visible */
+        margin: 16px 0 0 16px; /* extra top/left spacing */
         padding: 0;
         transform: none !important;
     }
 
-    .logo-container { padding: 6px 8px; }
+    .logo-container { padding: 10px 12px; }
 
     .loop-logo { width: 64px; }
     .download-buttons {
