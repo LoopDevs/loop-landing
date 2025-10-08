@@ -192,8 +192,8 @@ class ScrollAnimationController {
             const slideProgress = Math.min((scrollProgress - slideInStart) / (slideInEnd - slideInStart), 1);
             this.mockupContainer.style.opacity = 1; // Always full opacity
 
-            // Unstick after all animations complete (at 6.8x viewport height)
-            if (scrollY > this.heroHeight * 6.8) {
+            // Unstick after simplified animations complete
+            if (scrollY > this.heroHeight * 3.0) {
                 // Simply hide the phone after animations complete
                 this.mockupContainer.style.display = 'none';
             } else {
@@ -225,66 +225,28 @@ class ScrollAnimationController {
     }
 
     handleZoomAnimations(scrollY) {
-        // Calculate absolute scroll positions for each animation
+        // Simplified stages: full view -> top zoom -> middle zoom -> zoom out
         const mockupScrollStart = this.heroHeight * 0.5;
 
-        // Define scroll positions for each animation state
-        const stage1Start = mockupScrollStart;                    // Card zoom
-        const stage2Start = mockupScrollStart + this.heroHeight * 0.8;  // Merchant grid
-        const stage3Start = mockupScrollStart + this.heroHeight * 1.6;  // Reset to full (brief)
-        const stage4Start = mockupScrollStart + this.heroHeight * 1.8;  // Withdraw screen (quick transition)
-        const stage5Start = mockupScrollStart + this.heroHeight * 2.0;  // Earnings zoom (immediate)
-        const stage6Start = mockupScrollStart + this.heroHeight * 3.5;  // Withdraw button
-        const stage7Start = mockupScrollStart + this.heroHeight * 4.8;  // Final reset
+        const stageTopZoom = mockupScrollStart;                    // Zoom to top
+        const stageMiddleZoom = mockupScrollStart + this.heroHeight * 1.0;  // Zoom/pan to middle
+        const stageZoomOut = mockupScrollStart + this.heroHeight * 2.0;     // Zoom out to full
+        const stageEnd = mockupScrollStart + this.heroHeight * 2.6;         // End window for zoom-out
 
-        // Get screen elements
-        const screen1 = document.querySelector('.screen-1');
-        const screen2 = document.querySelector('.screen-2');
-
-        // Reset classes
+        // Reset classes each frame
         this.iphoneMockup.className = 'iphone-mockup';
-        if (this.cashbackAnnotation) this.cashbackAnnotation.classList.remove('visible');
-        if (this.giftcardsAnnotation) this.giftcardsAnnotation.classList.remove('visible');
 
-        // Determine current state based on scroll position
-        if (scrollY < stage1Start) {
-            // Before animations start
-            if (screen1) screen1.classList.add('active');
-            if (screen2) screen2.classList.remove('active');
-        } else if (scrollY < stage2Start) {
-            // Stage 1: Zoom to virtual card
+        if (scrollY < stageTopZoom) {
+            // Full view
+        } else if (scrollY < stageMiddleZoom) {
+            // Top zoom
             this.iphoneMockup.classList.add('zoom-card');
-            if (screen1) screen1.classList.add('active');
-            if (screen2) screen2.classList.remove('active');
-            if (this.cashbackAnnotation) this.cashbackAnnotation.classList.add('visible');
-        } else if (scrollY < stage3Start) {
-            // Stage 2: Pan to merchant grid
+        } else if (scrollY < stageZoomOut) {
+            // Middle zoom
             this.iphoneMockup.classList.add('zoom-merchants');
-            if (screen1) screen1.classList.add('active');
-            if (screen2) screen2.classList.remove('active');
-            if (this.giftcardsAnnotation) this.giftcardsAnnotation.classList.add('visible');
-        } else if (scrollY < stage4Start) {
-            // Stage 3: Reset to full view
-            if (screen1) screen1.classList.add('active');
-            if (screen2) screen2.classList.remove('active');
-        } else if (scrollY < stage5Start) {
-            // Stage 4: Switch to withdraw screen
-            if (screen1) screen1.classList.remove('active');
-            if (screen2) screen2.classList.add('active');
-        } else if (scrollY < stage6Start) {
-            // Stage 5: Zoom to earnings
-            this.iphoneMockup.classList.add('zoom-earnings');
-            if (screen1) screen1.classList.remove('active');
-            if (screen2) screen2.classList.add('active');
-        } else if (scrollY < stage7Start) {
-            // Stage 6: Pan to withdraw button
-            this.iphoneMockup.classList.add('zoom-withdraw');
-            if (screen1) screen1.classList.remove('active');
-            if (screen2) screen2.classList.add('active');
-        } else if (scrollY < this.heroHeight * 6.8) {
-            // Stage 7: Final reset
-            if (screen1) screen1.classList.remove('active');
-            if (screen2) screen2.classList.add('active');
+        } else if (scrollY < stageEnd) {
+            // Zoom out
+            this.iphoneMockup.classList.add('zoom-out');
         }
 
         // Trigger review animations when in view
