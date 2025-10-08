@@ -754,7 +754,7 @@ body {
     position: relative;
     margin-top: 30px;
     margin-bottom: 10px;
-    padding: 60px 0; /* extra vertical padding so shadows aren't clipped */
+    padding: 30px 0; /* spacing around the marquee wrapper */
     overflow: hidden;
     opacity: 1;
     background: white;
@@ -768,7 +768,8 @@ body {
 
 .scrolling-logos {
     width: 100%;
-    overflow: hidden;
+    overflow: hidden; /* clip the track horizontally */
+    padding: 60px 0;  /* inner vertical padding so logo tile shadows aren't clipped */
 }
 
 .logo-track {
