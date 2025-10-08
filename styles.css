@@ -1,0 +1,897 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    overflow-x: hidden;
+    background: #ffffff;
+    min-height: 400vh; /* Ensure there's space to scroll */
+}
+
+/* Logo Header */
+.logo-header {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+}
+
+.logo-container {
+    position: relative;
+    padding: 12px 20px;
+    transition: all 0.3s ease-out;
+}
+
+
+.loop-logo {
+    width: 80px;
+    height: auto;
+    fill: #1a1a1a;
+    position: relative;
+    z-index: 1;
+    transition: fill 0.3s ease-out;
+}
+
+/* Hero Section */
+.hero {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 1;
+    background: #ffffff;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 800;
+    color: #1a1a1a;
+    line-height: 1.2;
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 40px;
+}
+
+.highlight-text {
+    position: relative;
+    color: white;
+    padding: 0 20px;
+    z-index: 1;
+    display: inline-block;
+    margin-bottom: 12px;
+}
+
+.highlight-text::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    right: -12px;
+    top: -8px;
+    bottom: -8px;
+    background-image: repeating-linear-gradient(
+        -45deg,
+        #6366F1 0px,
+        #6366F1 4px,
+        #8B5CF6 4px,
+        #8B5CF6 8px,
+        #6366F1 8px,
+        #6366F1 12px,
+        #8B5CF6 12px,
+        #8B5CF6 16px
+    );
+    transform: skew(-1deg, -0.5deg) rotate(-0.3deg);
+    border-radius: 4px 8px 6px 10px;
+    z-index: -1;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+/* Download Buttons */
+.download-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 30px;
+    opacity: 1;
+    transform: scale(1);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.download-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    color: #1a1a1a;
+    cursor: not-allowed;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.download-btn:disabled {
+    cursor: not-allowed;
+}
+
+.store-icon {
+    width: 28px;
+    height: 28px;
+    fill: currentColor;
+}
+
+.btn-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.small-text {
+    font-size: 10px;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.main-text {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+/* Floating Logos */
+.floating-logos {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.logo {
+    position: absolute;
+    opacity: 0.9;
+    animation: float 6s ease-in-out infinite;
+    will-change: transform, opacity;
+    transition: none !important;
+}
+
+.logo img {
+    width: 80px;
+    height: 80px;
+    border-radius: 16px;
+    padding: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    background: white;
+    object-fit: cover;
+}
+
+/* Logo Positions */
+.logo-1 {
+    top: 15%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.logo-2 {
+    top: 20%;
+    right: 15%;
+    animation-delay: 0.5s;
+}
+
+.logo-3 {
+    bottom: 30%;
+    left: 15%;
+    animation-delay: 1s;
+}
+
+.logo-4 {
+    bottom: 25%;
+    right: 10%;
+    animation-delay: 1.5s;
+}
+
+.logo-5 {
+    top: 40%;
+    left: 5%;
+    animation-delay: 2s;
+}
+
+.logo-6 {
+    top: 45%;
+    right: 8%;
+    animation-delay: 2.5s;
+}
+
+.logo-7 {
+    bottom: 10%;
+    left: 30%;
+    animation-delay: 3s;
+}
+
+.logo-8 {
+    bottom: 15%;
+    right: 25%;
+    animation-delay: 3.5s;
+}
+
+/* Float Animation */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    33% {
+        transform: translateY(-20px);
+    }
+    66% {
+        transform: translateY(10px);
+    }
+}
+
+/* Scroll Animation States */
+.title-fading .hero-title {
+    opacity: 0;
+    transform: translateY(-50px);
+    filter: blur(10px);
+}
+
+/* App Screens */
+.app-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #f8f8f8;
+    overflow: hidden;
+    opacity: 0;
+    display: none;
+    transition: opacity 0.5s ease;
+}
+
+.app-screen.active {
+    opacity: 1;
+    display: block;
+}
+
+/* Virtual Card Section */
+.virtual-card-section {
+    padding: 20px;
+    position: relative;
+}
+
+.virtual-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    padding: 20px;
+    color: white;
+    position: relative;
+    height: 180px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.card-chip {
+    width: 40px;
+    height: 30px;
+    background: gold;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.card-number {
+    font-size: 18px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+.card-holder {
+    font-size: 12px;
+    text-transform: uppercase;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+}
+
+.card-brand {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.cashback-annotation {
+    position: absolute;
+    top: 20px;
+    right: -60px;
+    display: flex;
+    align-items: center;
+}
+
+.annotation-arrow {
+    width: 60px;
+    height: 40px;
+}
+
+.annotation-text {
+    background: #FF6B6B;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+    transform: rotate(5deg);
+    font-family: 'Marker Felt', cursive;
+}
+
+/* Merchant Grid Section */
+.merchant-grid-section {
+    padding: 20px;
+}
+
+.section-title {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.merchant-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.merchant-tile {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 10px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.merchant-tile::after {
+    content: attr(data-cashback);
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #4CAF50;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+/* Earnings Screen */
+.earnings-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 40px 20px;
+    text-align: center;
+    color: white;
+}
+
+.earnings-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.earnings-amount {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.earnings-subtitle {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.earnings-stats {
+    display: flex;
+    justify-content: space-around;
+    padding: 30px 20px;
+    background: white;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.withdraw-btn {
+    display: block;
+    width: calc(100% - 40px);
+    margin: 20px;
+    padding: 16px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* iPhone Mockup Section */
+.mockup-section {
+    position: relative;
+    height: 680vh; /* Exact height for all animation stages */
+    pointer-events: none;
+    z-index: 20;
+    margin-top: -100vh;
+    margin-bottom: 0;
+}
+
+/* External Cashback Annotation */
+.cashback-annotation-external {
+    position: fixed;
+    top: 30%;
+    left: calc(50% + 250px);
+    background: white;
+    padding: 16px 28px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    font-size: 20px;
+    font-weight: 600;
+    color: #000;
+    z-index: 30;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.cashback-annotation-external.visible {
+    opacity: 1;
+}
+
+/* Gift Cards Annotation */
+.giftcards-annotation-external {
+    position: fixed;
+    top: 45%;
+    left: calc(50% - 450px);
+    background: white;
+    padding: 16px 28px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    font-size: 20px;
+    font-weight: 600;
+    color: #000;
+    z-index: 30;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.giftcards-annotation-external.visible {
+    opacity: 1;
+}
+
+.mockup-container {
+    position: sticky;
+    top: 50%;
+    transform: translateY(50vh) scale(0.8);
+    opacity: 0;
+    transition: all 0.3s ease-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    pointer-events: auto;
+    /* Stop being sticky after animations */
+    max-height: 250vh;
+}
+
+.iphone-mockup {
+    position: relative;
+    transform: scale(1);
+    transition: transform 0.3s ease-out;
+}
+
+.iphone-frame {
+    width: 375px;
+    height: 812px;
+    background: #1a1a1a;
+    border-radius: 40px;
+    padding: 10px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3),
+                inset 0 0 0 2px rgba(255, 255, 255, 0.1);
+    position: relative;
+}
+
+.iphone-frame::before {
+    content: '';
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 25px;
+    background: #1a1a1a;
+    border-radius: 15px;
+}
+
+.iphone-screen {
+    width: 100%;
+    height: 100%;
+    background: white;
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+}
+
+.app-screen {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Zoom Areas */
+.zoom-area {
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.zoom-area-1 {
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 100px;
+}
+
+.zoom-area-2 {
+    top: 45%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 250px;
+    height: 150px;
+}
+
+.zoom-area-3 {
+    bottom: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 120px;
+}
+
+.highlight-content {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.highlight-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.highlight-content p {
+    font-size: 1rem;
+    color: #666;
+}
+
+/* Zoom Transform Classes */
+.iphone-mockup.zoom-card {
+    transform: scale(2.2) translateY(20%); /* Zoom to TOP of phone showing card */
+    transition: transform 0.5s ease-out;
+}
+
+.iphone-mockup.zoom-merchants {
+    transform: scale(2) translateY(-15%); /* Pan DOWN to lower 2/3 for merchants */
+    transition: transform 0.5s ease-out;
+}
+
+.iphone-mockup.zoom-earnings {
+    transform: scale(2.2) translateY(25%); /* Top third of withdraw screen */
+    transition: transform 0.5s ease-out;
+}
+
+.iphone-mockup.zoom-withdraw {
+    transform: scale(2) translateY(-10%); /* Lower 2/3 of withdraw screen */
+    transition: transform 0.5s ease-out;
+}
+
+.iphone-mockup.zoom-out {
+    transform: scale(1.2) translateY(0); /* Zoom out for withdraw screen */
+    transition: transform 0.5s ease-out;
+}
+
+/* Scrolling Merchant Logos */
+.scrolling-logos-container {
+    position: relative;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding: 60px 0;
+    overflow: hidden;
+    opacity: 1;
+    background: white;
+    z-index: 10;
+}
+
+.scrolling-logos-container.visible {
+    opacity: 1;
+    transition: opacity 0.5s ease-in;
+}
+
+.scrolling-logos {
+    width: 100%;
+    overflow: hidden;
+}
+
+.logo-track {
+    display: flex;
+    gap: 40px;
+    animation: scroll-logos 20s linear infinite;
+}
+
+@keyframes scroll-logos {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.merchant-logo {
+    flex-shrink: 0;
+    padding: 20px 40px;
+    background: white;
+    border-radius: 12px;
+    font-weight: bold;
+    color: #333;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    white-space: nowrap;
+}
+
+/* Reviews Section */
+.reviews-section {
+    padding: 80px 20px;
+    background: white;
+    position: relative;
+    z-index: 30;
+}
+
+.reviews-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    color: #1a1a1a;
+}
+
+.reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.review-card {
+    background: #f8f8f8;
+    padding: 30px;
+    border-radius: 16px;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.reviews-section.animated .review-card {
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+.reviews-section.animated .review-card:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.reviews-section.animated .review-card:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+.reviews-section.animated .review-card:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stars {
+    color: #FFD700;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}
+
+.review-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.review-author {
+    font-weight: 600;
+    color: #667eea;
+}
+
+/* Final CTA Section */
+.final-cta-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 100px 20px;
+    text-align: center;
+    color: white;
+    position: relative;
+    z-index: 30;
+}
+
+.cta-title {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.cta-subtitle {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    margin-bottom: 40px;
+}
+
+.download-buttons-final {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.download-btn-cta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 32px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid white;
+    border-radius: 12px;
+    color: white;
+    cursor: not-allowed;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    font-size: 1.1rem;
+}
+
+.download-btn-cta:disabled {
+    cursor: not-allowed;
+}
+
+.download-btn-cta:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Features Section */
+.features-section {
+    background: #f8f8f8;
+    padding: 100px 20px;
+    color: #1a1a1a;
+    margin-top: 100px;
+    position: relative;
+    z-index: 30;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.features-section h2 {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    margin-top: 50px;
+}
+
+.feature {
+    text-align: center;
+    padding: 30px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.feature:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+.feature-number {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    background: #1a1a1a;
+    color: white;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.feature h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.feature p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .logo img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .iphone-frame {
+        width: 300px;
+        height: 650px;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+}
