@@ -529,7 +529,7 @@ body {
     padding: 16px 28px;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     color: #000;
     z-index: 30;
@@ -552,7 +552,7 @@ body {
     padding: 16px 28px;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     color: #000;
     z-index: 30;
@@ -720,7 +720,8 @@ body {
         transform: translateX(-50%);
         max-width: calc(100vw - 32px);
         text-align: center;
-        padding: 12px 16px;
+        padding: 10px 14px;
+        font-size: clamp(12px, 3.5vw, 14px);
     }
 
     .cashback-annotation-external { top: 28%; }
@@ -755,9 +756,9 @@ body {
 /* Scrolling Merchant Logos */
 .scrolling-logos-container {
     position: relative;
-    margin-top: 50px;
-    margin-bottom: 50px;
-    padding: 60px 0;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    padding: 30px 0;
     overflow: hidden;
     opacity: 1;
     background: white;
@@ -789,15 +790,25 @@ body {
     }
 }
 
-.merchant-logo {
+.merchant-logo { /* container for logo images */
     flex-shrink: 0;
-    padding: 20px 40px;
+    padding: 16px 28px;
     background: white;
     border-radius: 12px;
-    font-weight: bold;
-    color: #333;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    white-space: nowrap;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.merchant-logo img {
+    display: block;
+    height: 28px;
+    width: auto;
+}
+
+@media (min-width: 769px) {
+    .merchant-logo img { height: 36px; }
 }
 
 /* Debug overlay */
@@ -944,9 +955,9 @@ body {
 /* Features Section */
 .features-section {
     background: #f8f8f8;
-    padding: 100px 20px;
+    padding: 80px 20px;
     color: #1a1a1a;
-    margin-top: 100px;
+    margin-top: 20px;
     position: relative;
     z-index: 30;
 }
