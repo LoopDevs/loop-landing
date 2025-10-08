@@ -249,6 +249,10 @@ body {
 
 /* Mobile adjustments: keep logos above and below CTA */
 @media (max-width: 768px) {
+    .download-buttons {
+        padding-left: clamp(16px, 5vw, 28px);
+        padding-right: clamp(16px, 5vw, 28px);
+    }
     .floating-logos {
         height: 100vh;
         top: 50%;
