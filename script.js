@@ -59,10 +59,13 @@ class ScrollAnimationController {
         const desktop = window.innerWidth >= 1024;
         const zoomOutStartAbs = 3200; // desktop zoom-out threshold
 
-        // Base needed height (timeline end + small runway)
-        const baseNeeded = this.timeline.end + this.heroHeight * 0.3;
+        // Runway after the zoom-out phase before the section ends
+        const runway = desktop ? this.heroHeight * 2.0 : this.heroHeight * 1.0;
+
+        // Base needed height (timeline end + runway)
+        const baseNeeded = this.timeline.end + runway;
         // Ensure enough space for desktop absolute zoom-out start + runway
-        const desktopNeeded = desktop ? (zoomOutStartAbs + this.heroHeight * 1.2) : 0;
+        const desktopNeeded = desktop ? (zoomOutStartAbs + runway + this.heroHeight * 0.2) : 0;
         const needed = Math.max(baseNeeded, desktopNeeded);
 
         const section = document.querySelector('.mockup-section');

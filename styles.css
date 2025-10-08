@@ -497,7 +497,7 @@ body {
 .mockup-section {
     position: relative;
     /* JS sets explicit height; keep a safe minimum as fallback */
-    min-height: 360vh;
+    min-height: 480vh;
     pointer-events: none;
     z-index: 20;
     margin-top: -100vh;
