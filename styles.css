@@ -136,6 +136,11 @@ body {
     fill: currentColor;
 }
 
+/* Recolor Google Play icon in bottom CTA to match white text */
+.download-btn-cta.google-play .store-icon {
+    filter: invert(1) brightness(1.2);
+}
+
 .btn-text {
     display: flex;
     flex-direction: column;
