@@ -596,10 +596,20 @@ body {
 .iphone-screen {
     width: 100%;
     height: 100%;
-    background: white;
+    background: #ffffff;
     border-radius: 30px;
     overflow: hidden;
     position: relative;
+}
+
+/* Replace in-mockup UI with static image */
+.iphone-screen {
+    background: #ffffff url('listings.png') center center / cover no-repeat;
+}
+
+/* Hide any existing UI layers inside the screen */
+.iphone-screen > * {
+    display: none !important;
 }
 
 .app-screen {
