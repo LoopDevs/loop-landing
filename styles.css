@@ -722,8 +722,8 @@ body {
         font-size: clamp(12px, 3.5vw, 14px);
     }
 
-    .cashback-annotation-external { top: 28%; }
-    .giftcards-annotation-external { top: 50%; }
+    .cashback-annotation-external { top: 10%; }
+    .giftcards-annotation-external { top: 20%; }
 
     .iphone-mockup.zoom-card {
         transform: scale(1.15) translateY(8%);
