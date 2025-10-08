@@ -233,6 +233,9 @@ class ScrollAnimationController {
         const stageZoomOut = mockupScrollStart + this.heroHeight * 2.6;        // Extend middle zoom duration
         const stageEnd = mockupScrollStart + this.heroHeight * 3.0;            // End window for zoom-out
 
+        // Fade gift-cards annotation slightly before zoom-out begins
+        const giftcardsHide = mockupScrollStart + this.heroHeight * 2.4;
+
         // Reset classes each frame
         this.iphoneMockup.className = 'iphone-mockup';
         // Reset annotations each frame
@@ -248,7 +251,9 @@ class ScrollAnimationController {
         } else if (scrollY < stageZoomOut) {
             // Middle zoom
             this.iphoneMockup.classList.add('zoom-merchants');
-            if (this.giftcardsAnnotation) this.giftcardsAnnotation.classList.add('visible');
+            if (this.giftcardsAnnotation && scrollY < giftcardsHide) {
+                this.giftcardsAnnotation.classList.add('visible');
+            }
         } else if (scrollY < stageEnd) {
             // Zoom out
             this.iphoneMockup.classList.add('zoom-out');
