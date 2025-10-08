@@ -691,7 +691,7 @@ body {
 }
 
 .iphone-mockup.zoom-out {
-    transform: scale(1.2) translateY(0); /* Zoom out for withdraw screen */
+    transform: scale(1) translateY(0); /* Final full view */
     transition: transform 0.5s ease-out;
 }
 

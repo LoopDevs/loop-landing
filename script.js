@@ -249,7 +249,6 @@ class ScrollAnimationController {
         // Stage fractions
         const topEndFrac = 0.30;      // end of top zoom
         const middleEndFrac = 0.78;   // end of extended middle zoom
-        const zoomOutEndFrac = 0.95;  // finish zoom-out before unstick window
 
         // Reset classes each frame
         this.iphoneMockup.className = 'iphone-mockup';
@@ -270,11 +269,9 @@ class ScrollAnimationController {
             if (progress < middleEndFrac - 0.08 && this.giftcardsAnnotation) {
                 this.giftcardsAnnotation.classList.add('visible');
             }
-        } else if (progress < zoomOutEndFrac) {
-            // Zoom out
-            this.iphoneMockup.classList.add('zoom-out');
         } else {
-            // Final part of timeline: keep full view until unstick
+            // Zoom out and hold full view through the end (single zoom-out stage)
+            this.iphoneMockup.classList.add('zoom-out');
         }
 
         // Trigger review animations when in view
