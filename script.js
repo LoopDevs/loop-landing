@@ -442,10 +442,64 @@ document.addEventListener('DOMContentLoaded', () => {
         let i = 0;
         const tryNext = () => {
             if (i >= srcs.length) return;
-            img.onerror = () => { i++; tryNext(); };
+            img.onerror = () => {
+                i++;
+                if (i >= srcs.length) {
+                    // Replace with text fallback showing the brand name
+                    const parent = img.parentElement;
+                    if (parent) {
+                        const label = document.createElement('span');
+                        label.className = 'merchant-logo-fallback';
+                        label.textContent = img.alt || 'Brand';
+                        parent.replaceChild(label, img);
+                    }
+                    return;
+                }
+                tryNext();
+            };
             img.src = srcs[i];
         };
         tryNext();
     };
     document.querySelectorAll('.merchant-logo img[data-srcs]').forEach(loadWithFallback);
+
+    // Seamless, infinite horizontal marquee for brand logos
+    (function initMarquee() {
+        const container = document.querySelector('.scrolling-logos');
+        const track = container?.querySelector('.logo-track');
+        if (!container || !track) return;
+
+        // Ensure there are at least two copies in the track for looping
+        if (!track.dataset.marqueeDoubled) {
+            track.innerHTML = track.innerHTML + track.innerHTML;
+            track.dataset.marqueeDoubled = 'true';
+        }
+
+        let offset = 0;
+        let speedPxPerSec = 40; // tune speed
+        let halfWidth = track.scrollWidth / 2;
+        let last = performance.now();
+
+        const step = (now) => {
+            const dt = (now - last) / 1000;
+            last = now;
+            offset += speedPxPerSec * dt;
+            if (offset >= halfWidth) offset -= halfWidth; // seamless wrap
+            track.style.transform = `translateX(${-offset}px)`;
+            requestAnimationFrame(step);
+        };
+
+        // Recompute widths on resize
+        const onResize = () => {
+            // Reset offset to avoid visible jumps when sizes change
+            offset = 0;
+            // Allow layout to settle before measuring
+            requestAnimationFrame(() => {
+                halfWidth = track.scrollWidth / 2;
+            });
+        };
+        window.addEventListener('resize', onResize);
+
+        requestAnimationFrame(step);
+    })();
 });
