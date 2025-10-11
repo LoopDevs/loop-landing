@@ -44,7 +44,7 @@ class ScrollAnimationController {
         // start: when sequence begins
         // end: when sequence finishes and mockup unsticks
         const start = this.heroHeight * 0.5;     // after initial header/slide-in
-        const total = this.heroHeight * 3.2;     // total sequence length
+        const total = this.heroHeight * 2.88;    // total sequence length (10% shorter)
         const end = start + total;
         return { start, end, total };
     }
@@ -52,7 +52,7 @@ class ScrollAnimationController {
     updateSectionHeight() {
         // Compute container height so sticky holds only as long as needed
         const desktop = window.innerWidth >= 1024;
-        const zoomOutStartAbs = 3200; // desktop zoom-out threshold
+        const zoomOutStartAbs = 2880; // desktop zoom-out threshold (10% earlier)
 
         // Runway after the zoom-out phase before the section ends
         const runway = desktop ? this.heroHeight * 2.0 : this.heroHeight * 1.0;
@@ -273,9 +273,9 @@ class ScrollAnimationController {
 
         // Stage fractions (relative), with desktop override for zoom-out start
         const topEndFrac = 0.30;      // end of top zoom
-        const middleEndFrac = 0.78;   // end of extended middle zoom
+        const middleEndFrac = 0.732;  // end of middle zoom (10% shorter duration)
         const desktop = window.innerWidth >= 1024;
-        const zoomOutStartAbs = 3200; // desktop zoom-out threshold (scrollY)
+        const zoomOutStartAbs = 2880; // desktop zoom-out threshold (10% earlier)
         const topEndAbs = start + (end - start) * topEndFrac;
         const middleEndAbsDefault = start + (end - start) * middleEndFrac;
         const middleEndAbs = desktop ? zoomOutStartAbs : middleEndAbsDefault;
